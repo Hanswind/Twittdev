@@ -1,8 +1,13 @@
+import { authService } from "myFirebase";
 import React, { useState } from "react";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [newAccount, setNewAccount] = useState(true);
+
+  const [error, setError] = useState("");
+
   const onChange = (event) => {
     const {
       target: { name, value },
@@ -14,9 +19,32 @@ const Auth = () => {
       setPassword(value);
     }
   };
-  const onSubmit = (event) => {
+
+  const onSubmit = async (event) => {
     event.preventDefault();
+    try {
+      if (newAccount) {
+        // create account
+        // 계정 생성하면 사용자는 바로 로그인 된다 공식 문서에 써있어서 따로 로그인도 안해줘도댐
+        const data = await authService.createUserWithEmailAndPassword(
+          email,
+          password
+        );
+        console.log(data);
+      } else {
+        // login
+        const data = await authService.signInWithEmailAndPassword(
+          email,
+          password
+        );
+      }
+    } catch (error) {
+      setError(error.message);
+    }
   };
+
+  const toggleAccount = () => setNewAccount((prev) => !prev);
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -36,7 +64,12 @@ const Auth = () => {
           value={password}
           onChange={onChange}
         />
-        <input type="submit" value="Log In" />
+        <input type="submit" value={newAccount ? "Create Account" : "Log In"} />
+
+        <span onClick={toggleAccount}>
+          {newAccount ? "Sign In" : "Create Account"}
+        </span>
+        {error}
       </form>
       <div>
         <button>Continue with Google</button>
