@@ -54,9 +54,9 @@ const Auth = () => {
 
     // 1. provider 생성
     let provider;
-    if (name == "google") {
+    if (name === "google") {
       provider = new firebaseInstance.auth.GoogleAuthProvider();
-    } else if (name == "github") {
+    } else if (name === "github") {
       provider = new firebaseInstance.auth.GithubAuthProvider();
     }
 
