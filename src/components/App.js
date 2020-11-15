@@ -14,10 +14,12 @@ function App() {
           uid: user.uid,
           updateProfile: (args) => user.updateProfile(args),
         });
+      } else {
+        setUserObj(null); // logout
       }
       setInit(true);
     });
-  });
+  }, []);
 
   const refreshUser = () => {
     const user = authService.currentUser;
